@@ -13,7 +13,7 @@ export function MainNav() {
 
         <nav className="ml-auto flex items-center gap-4">
           <Link href="/movies">Movies</Link>
-          <Link href="/movies">Genres</Link>
+          <Link href="/genres">Genres</Link>
           <Link href="/movies">About</Link>
           <Link href="/movies">Admin</Link>
           <ModeToggle />
