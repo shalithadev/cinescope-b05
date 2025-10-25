@@ -1,4 +1,6 @@
+// By default RSC
 export default function GenresPage() {
+  console.log("Server Component Here!!");
   // Example 04
   return (
     <div className="flex flex-col min-h-screen justify-center items-center p-6 gap-6">
