@@ -1,5 +1,14 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "cSpell.words": ["Aklilu", "Katsuko", "Lanying", "Saruhashi", "toogle"]
+  "cSpell.words": [
+    "Aklilu",
+    "imdb",
+    "Katsuko",
+    "Lanying",
+    "metacritic",
+    "mflix",
+    "Saruhashi",
+    "toogle"
+  ]
 }

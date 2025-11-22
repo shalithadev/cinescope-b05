@@ -12,12 +12,15 @@ import {
 
 type MovieCardProps = {
   movie: {
-    id: number;
+    _id: string;
     title: string;
-    genre: string;
-    releaseYear: number;
-    rating: number;
-    posterUrl?: string;
+    genres: string[];
+    year: number;
+    imdb: {
+      rating: number;
+      votes: number;
+    };
+    poster: string;
   };
 };
 
@@ -26,8 +29,8 @@ export default function MovieCard({ movie }: MovieCardProps) {
     <Card className="border-primary/20 hover:border-primary/50 overflow-hidden py-0 gap-0 transition-colors">
       <div className="aspect-2/3 w-full overflow-hidden">
         <Image
-          src={movie?.posterUrl || "/placeholder.svg"}
-          alt="..."
+          src={movie.poster || "/placeholder.svg"}
+          alt={movie.title}
           width={300}
           height={450}
           className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
@@ -38,7 +41,8 @@ export default function MovieCard({ movie }: MovieCardProps) {
       <CardContent className="p-4">
         <h3 className="line-clamp-1 font-semibold">{movie.title}</h3>
         <p className="text-muted-foreground text-sm">
-          {movie.releaseYear} &#8226; {movie.genre} &#8226; ⭐ {movie.rating}
+          {movie.year} &#8226; {movie.genres.join(", ")} &#8226; ⭐{" "}
+          {movie.imdb.rating}
         </p>
       </CardContent>
     </Card>
