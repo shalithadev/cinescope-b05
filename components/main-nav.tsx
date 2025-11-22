@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Logo } from "@/components/logo";
+import { Logo } from "@/components/shared/logo";
 import { ModeToggle } from "@/components/mode-toogle";
 
 export function MainNav() {
@@ -12,10 +12,30 @@ export function MainNav() {
         </Link>
 
         <nav className="ml-auto flex items-center gap-4">
-          <Link href="/movies">Movies</Link>
-          <Link href="/genres">Genres</Link>
-          <Link href="/movies">About</Link>
-          <Link href="/movies">Admin</Link>
+          <Link
+            href="/movies"
+            className="hover:text-primary text-sm font-medium transition-colors"
+          >
+            Movies
+          </Link>
+          <Link
+            href="/genres"
+            className="hover:text-primary text-sm font-medium transition-colors"
+          >
+            Genres
+          </Link>
+          <Link
+            href="/movies"
+            className="hover:text-primary text-sm font-medium transition-colors"
+          >
+            About
+          </Link>
+          <Link
+            href="/movies"
+            className="hover:text-primary text-sm font-medium transition-colors"
+          >
+            Admin
+          </Link>
           <ModeToggle />
         </nav>
       </div>
