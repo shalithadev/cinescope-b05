@@ -31,7 +31,7 @@ export function MainNav() {
             About
           </Link>
           <Link
-            href="/movies"
+            href="/dashboard"
             className="hover:text-primary text-sm font-medium transition-colors"
           >
             Admin

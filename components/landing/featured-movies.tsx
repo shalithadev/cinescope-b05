@@ -1,5 +1,6 @@
-import { Button } from "../ui/button";
-import MoviesList from "./movies-list";
+import { Suspense } from "react";
+import { Button } from "@/components/ui/button";
+import MoviesList, { MoviesListSkeleton } from "./movies-list";
 
 export default function FeaturedMovies() {
   return (
@@ -20,8 +21,15 @@ export default function FeaturedMovies() {
         <Button variant="outline">View All</Button>
       </div>
 
-      {/* Movies List */}
-      <MoviesList />
+      <div className="space-y-6">
+        {/* Movie Search Filter */}
+        <div className="w-full h-[122px] bg-purple-400 rounded-lg"></div>
+
+        {/* Movies List */}
+        <Suspense fallback={<MoviesListSkeleton />}>
+          <MoviesList />
+        </Suspense>
+      </div>
     </section>
   );
 }

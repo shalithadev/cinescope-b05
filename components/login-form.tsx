@@ -86,7 +86,12 @@ export function LoginForm({
                 </FieldError>
               </Field>
               <Field>
-                <FieldError className="text-xs text-center">
+                <FieldError
+                  className={cn(
+                    "text-xs text-center",
+                    state.success ? "text-green-600" : "text-red-600"
+                  )}
+                >
                   {state?.field === "general" ? state?.message : null}
                 </FieldError>
                 <Button type="submit" disabled={isPending}>
