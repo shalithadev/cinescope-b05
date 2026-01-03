@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { MoreHorizontalIcon } from "lucide-react";
 import {
   Table,
@@ -18,11 +17,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Movie } from "./type";
 import { Button } from "@/components/ui/button";
+import { MovieThumbnail } from "./movie-thumbnail";
+import type { WithId, Document } from "mongodb";
 
 type MovieTableProps = {
-  movies: Array<Movie>;
+  movies: WithId<Document>[];
 };
 
 export function MovieTable({ movies }: MovieTableProps) {
@@ -51,13 +51,7 @@ export function MovieTable({ movies }: MovieTableProps) {
               <TableCell className="font-medium">{key + 1}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  <Image
-                    src={movie.poster ?? "/placeholder.svg"}
-                    alt={movie.title}
-                    width={28}
-                    height={40}
-                    className="rounded-md"
-                  />
+                  <MovieThumbnail poster={movie.poster} title={movie.title} />
                   <span className="font-medium max-w-60 text-wrap line-clamp-2">
                     {movie.title}
                   </span>
@@ -88,7 +82,7 @@ export function MovieTable({ movies }: MovieTableProps) {
               </TableCell>
               <TableCell className="text-right">
                 <DropdownMenu>
-                  <DropdownMenuTrigger>
+                  <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
                       <span className="sr-only">Open menu</span>
                       <MoreHorizontalIcon className="h-4 w-4" />

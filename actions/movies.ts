@@ -1,9 +1,10 @@
 "use server";
 
-// import { db } from "@/db";
+import { db } from "@/db";
+import { MovieCreate } from "@/lib/type";
 
 // Get a list of movies from the database
-export const getMovies = async () => {
+export async function getMovies() {
   try {
     const moviesResponse = await fetch(
       `${process.env.API_BASE_URL}/v1/movies`,
@@ -31,4 +32,59 @@ export const getMovies = async () => {
     console.error("Error fetching movies:", error);
     return [];
   }
-};
+}
+
+export async function searchMovies(query: string) {
+  try {
+    const movies = await db
+      .collection("movies")
+      .find({ title: { $regex: query, $options: "i" } }) // Case-insensitive search
+      .limit(50)
+      .toArray();
+
+    if (movies && movies.length > 0) {
+      return {
+        success: true,
+        message: `${movies.length} movies found.`,
+        data: movies,
+      };
+    } else {
+      return {
+        success: false,
+        message: "No movies found matching your query.",
+        data: [],
+      };
+    }
+  } catch (error) {
+    console.log("MongoDB query error:", error);
+    return {
+      success: false,
+      message: "An error occurred while searching for movies.",
+      data: [],
+    };
+  }
+}
+
+export async function createMovie(movie: MovieCreate) {
+  try {
+    const result = await db.collection("movies_new").insertOne(movie);
+
+    if (result.acknowledged) {
+      return {
+        success: true,
+        message: "Movie created successfully.",
+      };
+    } else {
+      return {
+        success: false,
+        message: "Failed to create movie.",
+      };
+    }
+  } catch (error) {
+    console.log("MongoDB insert error:", error);
+    return {
+      success: false,
+      message: "An error occurred while creating the movie.",
+    };
+  }
+}

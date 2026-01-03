@@ -1,17 +1,15 @@
-import { getMovies } from "@/actions/movies";
+import { searchMovies } from "@/actions/movies";
 import { MovieTable } from "./movie-table";
-import { Movie } from "./type";
+// import { Movie } from "./type";
 
 export default async function MovieData() {
   try {
     // Fetch movies data from the server
-    const movies: Array<Movie> = await getMovies();
+    const { data, success } = await searchMovies("");
 
-    if (!movies.length) {
-      throw new Error("No movies found in the database.");
-    }
+    if (!success) throw new Error("No movies found in the database.");
 
-    return <MovieTable movies={movies} />;
+    return <MovieTable movies={data} />;
   } catch {
     return <div>No Movies Available!</div>;
   }
