@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { MoreHorizontalIcon } from "lucide-react";
 import {
   Table,
@@ -19,14 +22,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MovieThumbnail } from "./movie-thumbnail";
-import type { WithId, Document } from "mongodb";
+import type { Movie } from "./type";
+import UpdateMovieDialog from "@/components/dashboard/update-movie-dialog";
 
 type MovieTableProps = {
-  movies: WithId<Document>[];
+  movies: Movie[];
 };
 
 export function MovieTable({ movies }: MovieTableProps) {
-  console.log(movies[0].genres);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  // const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   return (
     <div className="rounded-md border">
@@ -92,7 +98,14 @@ export function MovieTable({ movies }: MovieTableProps) {
                     <DropdownMenuLabel>Movie Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>View Details</DropdownMenuItem>
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setShowUpdateDialog(true);
+                        setSelectedMovie(movie);
+                      }}
+                    >
+                      Edit
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="text-destructive">
                       Delete
@@ -104,6 +117,12 @@ export function MovieTable({ movies }: MovieTableProps) {
           ))}
         </TableBody>
       </Table>
+
+      <UpdateMovieDialog
+        open={showUpdateDialog}
+        onOpenChange={setShowUpdateDialog}
+        movie={selectedMovie}
+      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use server";
 
+import { ObjectId } from "mongodb";
 import { db } from "@/db";
 import { MovieCreate } from "@/lib/type";
 
@@ -37,7 +38,7 @@ export async function getMovies() {
 export async function searchMovies(query: string) {
   try {
     const movies = await db
-      .collection("movies")
+      .collection("movies_new")
       .find({ title: { $regex: query, $options: "i" } }) // Case-insensitive search
       .limit(50)
       .toArray();
@@ -85,6 +86,36 @@ export async function createMovie(movie: MovieCreate) {
     return {
       success: false,
       message: "An error occurred while creating the movie.",
+    };
+  }
+}
+
+export async function updateMovie(id: string, movie: MovieCreate) {
+  try {
+    const result = await db
+      .collection("movies_new")
+      .updateOne(
+        { _id: ObjectId.createFromHexString(id) },
+        { $set: movie },
+        { upsert: false }
+      );
+
+    if (result.acknowledged) {
+      return {
+        success: true,
+        message: "Movie updated successfully.",
+      };
+    } else {
+      return {
+        success: false,
+        message: "Failed to update movie.",
+      };
+    }
+  } catch (error) {
+    console.log("MongoDB insert error:", error);
+    return {
+      success: false,
+      message: "An error occurred while updating the movie.",
     };
   }
 }
