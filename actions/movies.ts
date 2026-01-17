@@ -16,7 +16,7 @@ export async function getMovies() {
           // Authorization: `Bearer ${process.env.API_KEY}`,
         },
         cache: "no-store",
-      }
+      },
     );
 
     if (!moviesResponse.ok) {
@@ -97,7 +97,7 @@ export async function updateMovie(id: string, movie: MovieCreate) {
       .updateOne(
         { _id: ObjectId.createFromHexString(id) },
         { $set: movie },
-        { upsert: false }
+        { upsert: false },
       );
 
     if (result.acknowledged) {
@@ -119,3 +119,29 @@ export async function updateMovie(id: string, movie: MovieCreate) {
     };
   }
 }
+
+export const deleteMovie = async (id: string) => {
+  try {
+    const result = await db
+      .collection("movies_new")
+      .deleteOne({ _id: ObjectId.createFromHexString(id) });
+
+    if (result.acknowledged) {
+      return {
+        success: true,
+        message: "Movie deleted successfully!",
+      };
+    } else {
+      return {
+        success: false,
+        message: "Failed to delete movie.",
+      };
+    }
+  } catch (error) {
+    console.log("MongoDB delete error:", error);
+    return {
+      success: false,
+      message: "An error occurred while deleting the movie.",
+    };
+  }
+};

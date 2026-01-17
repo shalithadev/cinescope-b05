@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { MoreHorizontalIcon } from "lucide-react";
 import {
   Table,
@@ -24,15 +25,45 @@ import { Button } from "@/components/ui/button";
 import { MovieThumbnail } from "./movie-thumbnail";
 import type { Movie } from "./type";
 import UpdateMovieDialog from "@/components/dashboard/update-movie-dialog";
+import { DeleteMovieDialog } from "@/components/dashboard/delete-movie-dialog";
+import { deleteMovie } from "@/actions/movies";
+import { cn } from "@/lib/utils";
 
 type MovieTableProps = {
   movies: Movie[];
 };
 
 export function MovieTable({ movies }: MovieTableProps) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
-  // const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+  const handleDeleteMovie = async (movieId: string) => {
+    setIsLoading(true);
+    const response = await deleteMovie(movieId);
+    setIsLoading(false);
+
+    if (response?.success) {
+      setShowDeleteDialog(false);
+      setSelectedMovie(null);
+      router.refresh();
+    }
+  };
+
+  const getStatusClass = (status: string) => {
+    switch (status) {
+      case "published":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "draft":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "archived":
+        return "bg-red-100 text-red-800 border-red-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
 
   return (
     <div className="rounded-md border">
@@ -81,7 +112,10 @@ export function MovieTable({ movies }: MovieTableProps) {
               <TableCell>
                 <Badge
                   variant="outline"
-                  className="bg-green-100 text-green-800 rounded-md capitalize"
+                  className={cn(
+                    "rounded-md capitalize",
+                    getStatusClass(movie.status),
+                  )}
                 >
                   {movie.status ?? "published"}
                 </Badge>
@@ -107,7 +141,13 @@ export function MovieTable({ movies }: MovieTableProps) {
                       Edit
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="text-destructive">
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={() => {
+                        setShowDeleteDialog(true);
+                        setSelectedMovie(movie);
+                      }}
+                    >
                       Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -121,6 +161,14 @@ export function MovieTable({ movies }: MovieTableProps) {
       <UpdateMovieDialog
         open={showUpdateDialog}
         onOpenChange={setShowUpdateDialog}
+        movie={selectedMovie}
+      />
+
+      <DeleteMovieDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onConfirmDelete={handleDeleteMovie}
+        isLoading={isLoading}
         movie={selectedMovie}
       />
     </div>
