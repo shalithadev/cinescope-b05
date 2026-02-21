@@ -8,6 +8,11 @@ export const GET = async () => {
     const movies = await db
       .collection("movies")
       .find()
+      // .find({
+      //   ...(title && { title: { $regex: title, $options: "i" } }),
+      //   ...(director && { director: { $regex: director, $options: "i" } }),
+      //   ...(year && { year: year }),
+      // })
       // .sort({ metacritic: -1 })
       .limit(50)
       .toArray()
@@ -20,7 +25,7 @@ export const GET = async () => {
     console.error("Error fetching movies from database:", error);
     return NextResponse.json(
       { error: "Failed to fetch movies" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 };
